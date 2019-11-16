@@ -99,11 +99,11 @@
   <script>
     // application state
     const state = {
-      day: 0,
-      data: [],
-      filter: {},
+      day: 0,       // how many days have we fetched from the api
+      data: [],     // store all events returned by api
+      filter: {},   // if we want to filter by sport or channel
     }
-    // create DOM element
+    // util function, returns a DOM element, keep your code DRY
     function dce(kind, params = {}, html = null) {
       const e = document.createElement(kind);
       const attrs = Object.keys(params);
@@ -111,54 +111,69 @@
       if (html) e.innerHTML = html;
       return e;
     }
-    // change text in load more button
+    // toggle text in load more button
     function toggleLoadMoreButton() {
       const b = document.getElementById('load_more_button');
       if (b) b.innerHTML = b.innerHTML == 'Próximo dia' ? 'A carregar...' : 'Próximo dia';
     }
     // add navigation bar
     function addUI() {
+      // util function, removes a element from main_content
       function removeFromMainContent(el) {
         const main = document.getElementById('main_content');
         if (main) main.removeChild(el);
       }
+      // removes all events from the DOM
       function removeAllEvents() {
+        // remove <a> used to scroll to present time
         const pr = document.getElementById('present');
         if (pr) removeFromMainContent(pr);
+        // remove all events stored in state.data
         state.data.map(e => {
           const id = 'x' + e.id;
           const el = document.getElementById(id);
           if (el) removeFromMainContent(el);
         });
       }
+      // return a select dropdown element with all channels
       function channelsSelect() {
         // create DOM element
         const select = dce('select', { id: 'channelsSelect' });
         // event handler
         select.onchange = function (ev) {
+          // remove all events
           removeAllEvents();
+          // reset sports select to default option
           const other = document.getElementById('sportsSelect');
           other.value = 'all';
+          // update state.filter to reflect change
           const channel = ev.target.value;
           state.filter = channel == 'all' ? {} : { channel: channel };
+          // render data with new filter applied
           renderData();
         };
         return select;
       }
+      // return a select dropdown element with all sports
       function sportsSelect() {
         // create DOM element
         const select = dce('select', { id: 'sportsSelect' });
         // event handler
         select.onchange = (ev) => {
+          // remove all events
           removeAllEvents();
+          // reset channel select to default option
           const other = document.getElementById('channelsSelect');
           other.value = 'all';
+          // update state.filter to reflect change
           const sport = ev.target.value;
           state.filter = sport == 'all' ? {} : { sport: sport };
+          // render data with new filter applied
           renderData();
         };
         return select;
       }
+      // add load more button at the end of events list
       function addLoadMoreButton() {
         const button = dce('button', { id: 'load_more_button' }, 'Próximo dia');
         button.onclick = () => {
@@ -174,7 +189,7 @@
       // remove loading message if still present
       const loading = document.getElementById('loading');
       if (loading) loading.remove();
-      // add 'Agora' link, jumps to live on tv now
+      // add 'Agora' link, which scrolls to live on tv now
       const p = dce('p', {}, '<a id="goToNow" href="#present">Agora</a>');
       // sports select wraped on a p for line height
       const s_select = sportsSelect();
@@ -184,7 +199,7 @@
       const c_select = channelsSelect();
       const p_channels = dce('p');
       p_channels.appendChild(c_select);
-      // div container
+      // div container, class mainUI
       const div = dce('div');
       div.classList.add('mainUI');
       div.appendChild(p);
@@ -198,26 +213,33 @@
     }
     // render data received
     function renderData(data = state.data) {
+      // util function, add element to main_content
       function addToMainContent(el) {
         const main = document.getElementById('main_content');
         if (main) main.appendChild(el);
       }
+      // add default option to a select dropdown
       function addDefaultOption(select, text) {
         const option = dce('option');
         option.text = text;
         option.value = 'all';
         select.add(option);
       }
+      // add options to a select dropdown
       function addOptions(id) {
+        // find select dropdown or return
         const select = document.getElementById(id);
         if (!select) return null;
+        // config object for sports and channel select
         const cfg = {
           sportsSelect: {
             defaultText: 'Filtrar por desporto',
+            // use new Set to eliminate duplicates
             options: [...new Set(state.data.map(e => e.modalidade.nomeModalidade))],
           },
           channelsSelect: {
             defaultText: 'Filtrar por canal',
+            // use new Set to eliminate duplicates
             options: [...new Set(state.data.map(e => e.canal.nome))],
           }
         }
@@ -272,7 +294,7 @@
           live.classList.add('live');
           timeRow.appendChild(live);
         }
-        // div container
+        // event div container
         div = dce('div', { id: 'x' + e.id });
         div.classList.add('event');
         div.appendChild(title);
