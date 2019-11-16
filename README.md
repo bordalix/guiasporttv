@@ -6,10 +6,10 @@ With the new update, Sport TV made its [EPG](https://www.sporttv.pt/guia) unusab
 
 ## Description
 
-It's a single page, with all the HTML, CSS and Javascript built in.
+It's a single page, with all the HTML, CSS and Javascript built in. No external dependencies.
 
 Just download the file to your computer and open it with a browser, it should work out-of-the-box.
 
-Feel free to tinker with it, it's a good project to start learning about web technologies, if you're on that path.
+Feel free to tinker with it, it's a good project to start learning about web technologies if you're on that path.
 
-Pull request are welcome.
+Pull requests are welcome.
