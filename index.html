@@ -17,16 +17,17 @@
         background-color: #f0f0f0;
       }
 
-      div {
-        padding: 1em 5%;
-      }
-
       #navigation_bar {
-        width: 90%;
+        width: 100%;
       }
 
       #main_content {
-        margin-top: 5em;
+        margin-top: 4em;
+        padding: 1rem;
+      }
+
+      #main_content div {
+        padding: 1em 5%;
       }
 
       #loading,
@@ -50,12 +51,13 @@
 
       div.mainUI {
         display: flex;
-        justify-content: space-between;
+        justify-content: space-evenly;
         position: fixed;
         top: 0;
         background-color: lavender;
         border-bottom: 1px solid black;
-        width: 80%;
+        width: 100%;
+        padding: 1rem 0;
       }
 
       div.event p:first-child {
@@ -195,7 +197,7 @@
         const loading = document.getElementById('loading');
         if (loading) loading.remove();
         // add 'Agora' link, which scrolls to live on tv now
-        const p = dce('p', {}, '<a id="goToNow" href="#present">Agora</a>');
+        const p_goToNow = dce('p', {}, '<a id="goToNow">Agora</a>');
         // sports select wraped on a p for line height
         const s_select = sportsSelect();
         const p_sports = dce('p');
@@ -207,7 +209,7 @@
         // div container, class mainUI
         const div = dce('div');
         div.classList.add('mainUI');
-        div.appendChild(p);
+        div.appendChild(p_goToNow);
         div.appendChild(p_channels);
         div.appendChild(p_sports);
         // add div container to navigation bar
@@ -268,6 +270,7 @@
         let end = new Date();
         let now = new Date();
         let presentFound = false;
+        let lastId;
         // render all events received
         data.map(e => {
           // check for filters
@@ -301,7 +304,8 @@
             timeRow.appendChild(live);
           }
           // event div container
-          div = dce('div', { id: 'x' + e.id });
+          const id = 'x' + e.id;
+          div = dce('div', { id: id });
           div.classList.add('event');
           div.appendChild(title);
           div.appendChild(infoRow);
@@ -309,15 +313,15 @@
           // search for present time/div
           if (now >= start && now < end) {
             if (!presentFound) {
-              a = dce('a', { id: 'present' });
-              a.classList.add('anchor');
-              addToMainContent(a);
+              const a_goToNow = document.getElementById('goToNow');
+              a_goToNow.href = `#${lastId}`;
               presentFound = true;
             }
             div.classList.add('live');
           } else {
             div.classList.add(e.tipoEmissao);
           }
+          lastId = id;
           // add to main content
           addToMainContent(div);
         });
