@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt">
   <head>
     <title>Guia Sport TV</title>
     <meta charset="utf-8" />
@@ -89,7 +89,9 @@
     <div id="loading">
       <p>A carregar (menos de 5 segundos)...</p>
     </div>
-    <div id="navigation_bar"></div>
+    <header>
+      <div id="navigation_bar"></div>
+    </header>
     <div id="main_content"></div>
     <div id="load_more"></div>
     <div id="footer">
@@ -113,8 +115,7 @@
       // toggle text in load more button
       function toggleLoadMoreButton() {
         const b = document.getElementById('load_more_button');
-        if (b)
-          b.innerHTML = b.innerHTML == 'Próximo dia' ? 'A carregar...' : 'Próximo dia';
+        if (b) b.innerHTML = b.innerHTML == 'Próximo dia' ? 'A carregar...' : 'Próximo dia';
       }
       // add navigation bar
       function addUI() {
@@ -137,7 +138,8 @@
         }
         // return a select dropdown element with all channels
         function channelsSelect() {
-          // create DOM element
+          // create DOM elements
+          const label = dce('label');
           const select = dce('select', { id: 'channelsSelect' });
           // event handler
           select.onchange = function(ev) {
@@ -152,11 +154,13 @@
             // render data with new filter applied
             renderData();
           };
-          return select;
+          label.appendChild(select);
+          return label;
         }
         // return a select dropdown element with all sports
         function sportsSelect() {
-          // create DOM element
+          // create DOM elements
+          const label = dce('label');
           const select = dce('select', { id: 'sportsSelect' });
           // event handler
           select.onchange = ev => {
@@ -171,7 +175,8 @@
             // render data with new filter applied
             renderData();
           };
-          return select;
+          label.appendChild(select);
+          return label;
         }
         // add load more button at the end of events list
         function addLoadMoreButton() {
@@ -331,7 +336,7 @@
           const y = now.getFullYear();
           const initDate = '?dataInicio=' + d + '%2F' + m + '%2F' + y + '+00:00';
           const endDate = '&dataFim=' + d + '%2F' + m + '%2F' + y + '+23:59';
-          const proxy = 'https://cors-anywhere.herokuapp.com/';
+          const proxy = 'https://corseverywhere.bordalix.workers.dev/?';
           const uri = 'https://www.sporttv.pt/api/channels/epg';
           const channels = '&idCanal=7133,727,728,729,5406,5422,7386';
           const limit = '&numeroRegistos=600';
