@@ -275,6 +275,7 @@
           // channel and sport row
           channel = dce('span', {}, e.canal.nome);
           const validName = e.canal.nome.replace(/\s/g,'_');
+          channel.classList.add('channel');
           channel.classList.add(validName);
           event = dce('span', {}, e.evento.nome);
           sport = dce('span', {}, e.modalidade.nomeModalidade);
