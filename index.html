@@ -128,15 +128,10 @@
         }
         // removes all events from the DOM
         function removeAllEvents() {
-          // remove <a> used to scroll to present time
-          const pr = document.getElementById('present');
-          if (pr) removeFromMainContent(pr);
-          // remove all events stored in state.data
-          state.data.map(e => {
-            const id = 'x' + e.id;
-            const el = document.getElementById(id);
-            if (el) removeFromMainContent(el);
-          });
+          const mainContent = document.getElementById('main_content');
+          while (mainContent.firstChild) {
+            mainContent.removeChild(mainContent.firstChild);
+          }
         }
         // return a select dropdown element with all channels
         function channelsSelect() {
@@ -197,7 +192,7 @@
         const loading = document.getElementById('loading');
         if (loading) loading.remove();
         // add 'Agora' link, which scrolls to live on tv now
-        const p_goToNow = dce('p', {}, '<a id="goToNow">Agora</a>');
+        const p_goToNow = dce('p', {}, '<a id="goToNow" href="#agora">Agora</a>');
         // sports select wraped on a p for line height
         const s_select = sportsSelect();
         const p_sports = dce('p');
@@ -270,7 +265,7 @@
         let end = new Date();
         let now = new Date();
         let presentFound = false;
-        let lastId;
+        let lastDiv;
         // render all events received
         data.map(e => {
           // check for filters
@@ -281,6 +276,8 @@
           title = dce('p', {}, e.descricao);
           // channel and sport row
           channel = dce('span', {}, e.canal.nome);
+          const validName = e.canal.nome.replace(/\s/g,'_');
+          channel.classList.add(validName);
           event = dce('span', {}, e.evento.nome);
           sport = dce('span', {}, e.modalidade.nomeModalidade);
           infoRow = document.createElement('p');
@@ -304,8 +301,7 @@
             timeRow.appendChild(live);
           }
           // event div container
-          const id = 'x' + e.id;
-          div = dce('div', { id: id });
+          div = dce('div');
           div.classList.add('event');
           div.appendChild(title);
           div.appendChild(infoRow);
@@ -313,21 +309,22 @@
           // search for present time/div
           if (now >= start && now < end) {
             if (!presentFound) {
-              const a_goToNow = document.getElementById('goToNow');
-              a_goToNow.href = `#${lastId}`;
+              lastDiv.id = 'agora';
               presentFound = true;
             }
             div.classList.add('live');
           } else {
             div.classList.add(e.tipoEmissao);
           }
-          lastId = id;
+          if (!presentFound) lastDiv = div;
           // add to main content
           addToMainContent(div);
         });
         // re-populate filters
         addOptions('sportsSelect');
         addOptions('channelsSelect');
+        // scroll to first present event
+        lastDiv.scrollIntoView();
       }
       // fetch data from api
       function fetchData() {
