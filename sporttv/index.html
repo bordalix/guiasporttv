@@ -1,0 +1,58 @@
+<html>
+  <head>
+
+  </head>
+  <body>
+    <style>
+      html {
+        background-color: #f0f0f0;
+      }
+      nav {
+        background-color: lavender;
+        display: block;
+        position: fixed;
+        top: 0;
+        width: 100%;
+      }
+      nav div {
+        display: flex;
+        justify-content: space-around;
+        padding: 1rem;
+        margin: 1rem;
+      }
+
+      div#eventList {
+        margin: 0 auto;
+        margin-top: 7rem;
+        width: 90%;
+      }
+      div#eventList>div {
+        background-color: white;
+        margin: 1rem;
+        padding: 1rem;
+      }
+      div#eventList>div.DIRETO {
+        background-color: #f3f379;
+      }
+      div#eventList>div p:first-child {
+        font-weight: 700;
+      }
+      p#more {
+        background-color: #f0f0f0;
+        display: flex;
+        justify-content: center;
+      }
+      span {
+        margin-right: 1em;
+        font-size: 0.8em;
+      }
+    </style>
+    <div id="root"></div>
+    <!-- Load React. -->
+    <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <!-- Load our React component. -->
+    <script src="app.js"></script>
+  </body>
+</html>
