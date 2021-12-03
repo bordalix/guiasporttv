@@ -177,6 +177,7 @@
         }
         // add load more button at the end of events list
         function addLoadMoreButton() {
+          if (document.getElementById('load_more_button')) return;
           const button = dce('button', { id: 'load_more_button' }, 'Próximo dia');
           button.onclick = () => {
             state.day = state.day + 1;
@@ -187,12 +188,10 @@
           if (loadMore) loadMore.appendChild(button);
         }
         // return if UI already inserted
-        if (document.getElementById('goToNow')) return null;
+        if (document.getElementById('mainUI')) return null;
         // remove loading message if still present
         const loading = document.getElementById('loading');
         if (loading) loading.remove();
-        // add 'Agora' link, which scrolls to live on tv now
-        const p_goToNow = dce('p', {}, '<a id="goToNow" href="#agora">Agora</a>');
         // sports select wraped on a p for line height
         const s_select = sportsSelect();
         const p_sports = dce('p');
@@ -202,9 +201,8 @@
         const p_channels = dce('p');
         p_channels.appendChild(c_select);
         // div container, class mainUI
-        const div = dce('div');
+        const div = dce('div', { id: 'mainUI' });
         div.classList.add('mainUI');
-        div.appendChild(p_goToNow);
         div.appendChild(p_channels);
         div.appendChild(p_sports);
         // add div container to navigation bar
@@ -324,7 +322,7 @@
         addOptions('sportsSelect');
         addOptions('channelsSelect');
         // scroll to first present event
-        lastDiv.scrollIntoView();
+        if (lastDiv) lastDiv.scrollIntoView();
       }
       // fetch data from api
       function fetchData() {
